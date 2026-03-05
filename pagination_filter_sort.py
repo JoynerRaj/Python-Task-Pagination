@@ -3,13 +3,17 @@ def paginate_filter_sort(data, page, page_size, filters, sort_by, order):
     filtered_data = []
 
     for item in data:
-        if item["category"] == filters["category"] and item["status"] == filters["status"]:
+        match = True
+
+        for key, value in filters.items():
+            if item[key] != value:
+                match = False
+                break
+
+        if match:
             filtered_data.append(item)
 
-    if order == "desc":
-        reverse = True
-    else:
-        reverse = False
+    reverse = True if order == "desc" else False
 
     filtered_data.sort(key=lambda x: x[sort_by], reverse=reverse)
 
@@ -28,15 +32,20 @@ data = [
 {"id":6,"name":"Product F","category":"Electronics","status":"active"}
 ]
 
+
 page = 1
 page_size = 3
 
+
 filters = {"category":"Electronics","status":"active"}
+
 
 sort_by = input("Enter field to sort by (id/name/category/status): ")
 order = input("Enter order (asc/desc): ")
 
+
 result = paginate_filter_sort(data, page, page_size, filters, sort_by, order)
+
 
 print("\nResult:")
 for item in result:
